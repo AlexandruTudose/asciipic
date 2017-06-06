@@ -45,7 +45,6 @@ public class Controller {
     @Autowired
     private FilterService filterService;
 
-
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<String> addStudent(@RequestParam Map<String, String> requestParams, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -141,5 +140,4 @@ public class Controller {
         }
         return new ResponseEntity<List<JournalizeFilter>>(journalizeFilters, HttpStatus.CREATED);
     }
-
 }

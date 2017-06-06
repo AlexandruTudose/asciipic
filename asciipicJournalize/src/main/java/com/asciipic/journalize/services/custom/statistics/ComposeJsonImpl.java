@@ -2,6 +2,7 @@ package com.asciipic.journalize.services.custom.statistics;
 
 import com.asciipic.journalize.models.InformationJSON;
 
+
 import java.util.Map;
 
 public class ComposeJsonImpl {

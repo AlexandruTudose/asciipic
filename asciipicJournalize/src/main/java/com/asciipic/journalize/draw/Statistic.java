@@ -75,8 +75,8 @@ public class Statistic extends JPanel {
         graphics.drawString("Partial recordings wih some properties", 200, height - 50);
 
         repaint();
-
         String path = "image.jpg";
+
         try {
             File outputFile = new File(path);
             ImageIO.write(this.image, "png", outputFile);
