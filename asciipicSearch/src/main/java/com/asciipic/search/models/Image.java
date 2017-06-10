@@ -55,9 +55,6 @@ public class Image {
     )
     private List<Tag> tags;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "image", cascade = CascadeType.ALL)
-    private SavedImage image;
-
     public long getId() {
         return id;
     }
@@ -130,14 +127,6 @@ public class Image {
         this.tags = tags;
     }
 
-    public SavedImage getImage() {
-        return image;
-    }
-
-    public void setImage(SavedImage image) {
-        this.image = image;
-    }
-
     public String getSize() {
         return size;
     }
@@ -153,4 +142,6 @@ public class Image {
     public void setSaved(boolean saved) {
         isSaved = saved;
     }
+
+
 }

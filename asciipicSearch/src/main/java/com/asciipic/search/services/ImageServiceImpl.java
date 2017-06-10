@@ -10,7 +10,11 @@ import com.asciipic.search.repositories.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -29,9 +33,13 @@ public class ImageServiceImpl implements ImageService {
     AsciiService asciiService;
 
     @Override
-    public SavedImage findImageById(Long imageId) {
-
+    public SavedImage findSavedImageById(Long imageId) {
         return savedImageRepository.findOne(imageId);
+    }
+
+    @Override
+    public Image findImageById(Long imageId){
+        return imageRepository.findOne(imageId);
     }
 
     @Override
@@ -40,7 +48,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void addNewImage(ImagePostDTO imagePostDTO) {
+    public Image addNewImage(ImagePostDTO imagePostDTO) throws SQLException {
 //        TODO: verify the input
         imagePostDTO.getTags();
 
@@ -67,15 +75,23 @@ public class ImageServiceImpl implements ImageService {
         image.setWidth(imagePostDTO.getWidth());
         image.setHeight(imagePostDTO.getHeight());
         image.setPostDate(imagePostDTO.getPostDate());
+        image.setCrawlDate(imagePostDTO.getCrawlDate());
         image.setIsSaved(imagePostDTO.getSaved());
         image.setTags(newListOfTags);
-        imageRepository.save(image);
+        Image newImage = imageRepository.save(image);
 
-        if (image.getIsSaved()) {
-            SavedImage savedImage = new SavedImage();
-            savedImage.setData(imagePostDTO.getBlobImage());
-            savedImage.setAsciiData(asciiService.transformImageToAscii(imagePostDTO.getBlobImage()));
-            savedImageRepository.save(savedImage);
-        }
+        SavedImage savedImage = new SavedImage();
+        byte[] bytes = new byte[2];
+        Arrays.fill( bytes, (byte) 1 );
+
+        Blob imageBlob = new SerialBlob(imagePostDTO.getByteImage());
+        savedImage.setId(newImage.getId());
+        savedImage.setData(bytes);
+        savedImage.setAsciiData(asciiService.transformImageToAscii(imageBlob));
+
+        savedImageRepository.save(savedImage);
+        savedImageRepository.updateBlob(imagePostDTO.getByteImage(),newImage.getId());
+
+        return newImage;
     }
 }

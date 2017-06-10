@@ -1,8 +1,9 @@
 package com.asciipic.search.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ImageGetDTO {
+public class ImageGetDTO implements Serializable{
     private String source;
     private String postDate;
     private String size;
