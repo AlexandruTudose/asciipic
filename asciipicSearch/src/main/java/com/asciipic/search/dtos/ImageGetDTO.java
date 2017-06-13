@@ -8,6 +8,7 @@ public class ImageGetDTO implements Serializable {
     private String postDate;
     private String size;
     private List<String> tags;
+    private int number;
 
     public String getSource() {
         return source;
@@ -39,5 +40,13 @@ public class ImageGetDTO implements Serializable {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

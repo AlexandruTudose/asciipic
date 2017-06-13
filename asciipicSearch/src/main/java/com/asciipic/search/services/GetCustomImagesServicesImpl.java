@@ -27,6 +27,9 @@ public class GetCustomImagesServicesImpl implements GetCustomImagesService {
                 if (isAValidImage(image, imageGetDTO)) {
                     listOfIds.add(image.getId());
                 }
+                if(listOfIds.size() >= imageGetDTO.getNumber()){
+                    break;
+                }
             } catch (ParseException e) {
                 return listOfIds;
             }
