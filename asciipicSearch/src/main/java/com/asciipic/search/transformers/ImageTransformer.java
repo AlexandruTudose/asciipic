@@ -38,4 +38,36 @@ public class ImageTransformer {
 
         return imagePostDTO;
     }
+
+//    public Image toModel(ImagePostDTO imagePostDTO){
+//        Image image = new Image();
+//        List<String> listOfTags = imagePostDTO.getTags();
+//        List<Tag> newListOfTags = new ArrayList<>();
+//        Tag newTag;
+
+//        for (String listOfTag : listOfTags) {
+//            if (tagRepository.findNumberByName(listOfTag) == 0) {
+//                Tag tag = new Tag(listOfTag);
+//                newTag = tagRepository.save(tag);
+//            } else {
+//                newTag = new Tag();
+//                newTag.setId(tagRepository.findIdByName(listOfTag));
+//                newTag.setName(listOfTag);
+//            }
+//            newListOfTags.add(newTag);
+//        }
+//
+//        image.setUrl(imagePostDTO.getUrl());
+//        image.setSource(imagePostDTO.getSource());
+//        image.setSize(imagePostDTO.getSize());
+//        image.setWidth(imagePostDTO.getWidth());
+//        image.setHeight(imagePostDTO.getHeight());
+//        image.setPostDate(imagePostDTO.getPostDate());
+//        image.setCrawlDate(imagePostDTO.getCrawlDate());
+//        image.setIsSaved(imagePostDTO.getSaved());
+//        image.setTags(newListOfTags);
+//
+//        return image;
+//    }
+
 }

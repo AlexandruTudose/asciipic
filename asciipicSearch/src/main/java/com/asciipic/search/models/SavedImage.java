@@ -2,7 +2,6 @@ package com.asciipic.search.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Blob;
 
 @Entity
 @Table(name = "saved_images")

@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image findImageById(Long imageId){
+    public Image findImageById(Long imageId) {
         return imageRepository.findOne(imageId);
     }
 
@@ -82,7 +82,7 @@ public class ImageServiceImpl implements ImageService {
 
         SavedImage savedImage = new SavedImage();
         byte[] bytes = new byte[2];
-        Arrays.fill( bytes, (byte) 1 );
+        Arrays.fill(bytes, (byte) 1);
 
         Blob imageBlob = new SerialBlob(imagePostDTO.getByteImage());
         savedImage.setId(newImage.getId());
@@ -90,7 +90,7 @@ public class ImageServiceImpl implements ImageService {
         savedImage.setAsciiData(asciiService.transformImageToAscii(imageBlob));
 
         savedImageRepository.save(savedImage);
-        savedImageRepository.updateBlob(imagePostDTO.getByteImage(),newImage.getId());
+        savedImageRepository.updateBlob(imagePostDTO.getByteImage(), newImage.getId());
 
         return newImage;
     }

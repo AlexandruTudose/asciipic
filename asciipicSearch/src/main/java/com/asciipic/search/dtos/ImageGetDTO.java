@@ -3,7 +3,7 @@ package com.asciipic.search.dtos;
 import java.io.Serializable;
 import java.util.List;
 
-public class ImageGetDTO implements Serializable{
+public class ImageGetDTO implements Serializable {
     private String source;
     private String postDate;
     private String size;

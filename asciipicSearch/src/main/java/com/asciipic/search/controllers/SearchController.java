@@ -5,7 +5,6 @@ import com.asciipic.search.dtos.ImagePostDTO;
 import com.asciipic.search.dtos.ResponseDTO;
 import com.asciipic.search.models.Image;
 import com.asciipic.search.models.SavedImage;
-import com.asciipic.search.models.Tag;
 import com.asciipic.search.repositories.ImageRepository;
 import com.asciipic.search.repositories.TagRepository;
 import com.asciipic.search.services.BuildResponseService;
@@ -19,11 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,12 +28,6 @@ public class SearchController {
 
     @Autowired
     ImageService imageService;
-
-    @Autowired
-    ImageRepository imageRepository;
-
-    @Autowired
-    TagRepository tagRepository;
 
     @Value("${path.domain}")
     private String domain;
@@ -108,31 +96,4 @@ public class SearchController {
 
         return new ResponseEntity<>(new ResponseDTO(true, imageUrl), HttpStatus.OK);
     }
-
-    private void addImage() throws ParseException {
-        Image image = new Image();
-        image.setUrl("facebook");
-        image.setHeight(22);
-        image.setWidth(33);
-        image.setSize("large");
-
-        DateFormat format = new SimpleDateFormat("dd-mm-yyyy");
-        Date dateOne = format.parse("21-12-2014");
-
-        Tag newTag = new Tag();
-        newTag.setName("maria");
-        Tag ttt = tagRepository.save(newTag);
-
-        List<Tag> tagssss = new ArrayList<>();
-        tagssss.add(ttt);
-
-        image.setPostDate(dateOne);
-        image.setCrawlDate(dateOne);
-        image.setSource("facebook");
-        image.setTags(tagssss);
-        image.setIsSaved(true);
-        imageRepository.save(image);
-    }
-
-
 }
