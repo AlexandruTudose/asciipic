@@ -30,6 +30,8 @@ public class JournalizeFilter {
     @Column(name = "type", length = 32)
     private String type;
 
+    public JournalizeFilter() {
+    }
 
     public JournalizeFilter(Journalize journalize) {
         this.journalize = journalize;

@@ -25,6 +25,9 @@ public class JournalizeRegister {
     @Column(name = "ip", length = 32)
     private String ip;
 
+    public JournalizeRegister() {
+    }
+
     public long getId() {
         return id;
     }

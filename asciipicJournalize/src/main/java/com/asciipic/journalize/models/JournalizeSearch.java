@@ -31,6 +31,9 @@ public class JournalizeSearch {
     @Column(name = "tag", length = 32)
     private String tag;
 
+    public JournalizeSearch() {
+    }
+
     public long getId() {
         return id;
     }

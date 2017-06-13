@@ -1,8 +1,5 @@
 package com.asciipic.journalize.models;
 
-import com.asciipic.journalize.models.Journalize;
-import com.asciipic.journalize.models.User;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -29,6 +26,9 @@ public class JournalizeLogin {
     @NotNull
     @Column(name = "user_agent", length = 32)
     private String userAgent;
+
+    public JournalizeLogin() {
+    }
 
     public JournalizeLogin(Journalize journalize) {
         this.journalize = journalize;
