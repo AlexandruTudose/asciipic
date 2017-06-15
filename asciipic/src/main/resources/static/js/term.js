@@ -19,8 +19,19 @@ function sendCommand(command, terminal) {
         data: JSON.stringify(data),
         dataType: 'json',
         timeout: 100000,
-        success: function (data) {
-            terminal.echo(data["content"]);
+        success: function (responses) {
+            responses.forEach(response => {
+                if(response.metadata.successful == true){
+                    response.content.forEach(content => {
+                        terminal.echo(content);
+                    })
+                }
+                else{
+                    response.content.forEach(content => {
+                        terminal.error(content);
+                    })
+                }
+            })
         },
         error: function (e) {
             terminal.error("error: " + e.status);
