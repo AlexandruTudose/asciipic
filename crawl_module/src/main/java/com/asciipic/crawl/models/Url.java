@@ -17,7 +17,19 @@ public class Url implements Serializable{
     @Column(name = "name")
     private String name;
 
+    @Column(name = "width")
+    long width;
+
+    @Column(name = "height")
+    long height;
+
     public Url() {
+    }
+
+    public Url(String name, long width, long height) {
+        this.name = name;
+        this.width = width;
+        this.height = height;
     }
 
     public Url(String name) {

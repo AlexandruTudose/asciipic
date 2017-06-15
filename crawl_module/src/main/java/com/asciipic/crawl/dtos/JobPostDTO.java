@@ -11,8 +11,7 @@ public class JobPostDTO implements Serializable {
     private long number;
     private List<String> tags;
     private Date postDate;
-    private long width;
-    private long height;
+    private String size;
 
     public JobPostDTO() {
     }
@@ -57,19 +56,23 @@ public class JobPostDTO implements Serializable {
         this.postDate = postDate;
     }
 
-    public long getWidth() {
-        return width;
+    public String getSize() {
+        return size;
     }
 
-    public void setWidth(long width) {
-        this.width = width;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public long getHeight() {
-        return height;
-    }
-
-    public void setHeight(long height) {
-        this.height = height;
+    @Override
+    public String toString() {
+        return "JobPostDTO{" +
+                "crawlId=" + crawlId +
+                ", site='" + site + '\'' +
+                ", number=" + number +
+                ", tags=" + tags +
+                ", postDate=" + postDate +
+                ", size='" + size + '\'' +
+                '}';
     }
 }

@@ -19,4 +19,11 @@ public class CrawlUpdateDTO {
     public void setLinkNames(List<String> linkNames) {
         this.linkNames = linkNames;
     }
+
+    @Override
+    public String toString() {
+        return "CrawlUpdateDTO{" +
+                "linkNames=" + linkNames +
+                '}';
+    }
 }

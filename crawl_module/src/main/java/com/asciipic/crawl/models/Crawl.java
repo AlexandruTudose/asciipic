@@ -40,11 +40,8 @@ public class Crawl implements Serializable{
     @Column(name = "post_date")
     private Date postDate;
 
-    @Column(name = "height")
-    private long height;
-
-    @Column(name = "width")
-    private long width;
+    @Column(name = "image_size")
+    private String imageSize;
 
     @Column(name = "number_of_images")
     private long numberOfImages;
@@ -61,14 +58,13 @@ public class Crawl implements Serializable{
     public Crawl() {
     }
 
-    public Crawl(Job job, boolean isDone, List<Url> urls, String site, Date postDate, long height, long width, long numberOfImages, List<Tag> tags) {
+    public Crawl(Job job, boolean isDone, List<Url> urls, String site, Date postDate, String imageSize, long numberOfImages, List<Tag> tags) {
         this.job = job;
         this.isDone = isDone;
         this.urls = urls;
         this.site = site;
         this.postDate = postDate;
-        this.height = height;
-        this.width = width;
+        this.imageSize = imageSize;
         this.numberOfImages = numberOfImages;
         this.tags = tags;
     }
@@ -121,20 +117,12 @@ public class Crawl implements Serializable{
         this.postDate = postDate;
     }
 
-    public long getHeight() {
-        return height;
+    public String getImageSize() {
+        return imageSize;
     }
 
-    public void setHeight(long height) {
-        this.height = height;
-    }
-
-    public long getWidth() {
-        return width;
-    }
-
-    public void setWidth(long width) {
-        this.width = width;
+    public void setImageSize(String imageSize) {
+        this.imageSize = imageSize;
     }
 
     public long getNumberOfImages() {

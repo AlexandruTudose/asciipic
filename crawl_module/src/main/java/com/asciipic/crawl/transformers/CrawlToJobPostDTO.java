@@ -20,8 +20,7 @@ public class CrawlToJobPostDTO implements Transformer<Crawl, JobPostDTO> {
         jobPostDTO.setNumber(entity.getNumberOfImages());
         jobPostDTO.setTags(tagListToTagNamesList(entity.getTags()));
         jobPostDTO.setPostDate(entity.getPostDate());
-        jobPostDTO.setWidth(entity.getWidth());
-        jobPostDTO.setHeight(entity.getHeight());
+        jobPostDTO.setSize(entity.getImageSize());
         return jobPostDTO;
     }
 

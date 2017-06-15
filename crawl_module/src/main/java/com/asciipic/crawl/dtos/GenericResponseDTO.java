@@ -7,6 +7,14 @@ public class GenericResponseDTO<M, C> implements Serializable {
     private M metadata;
     private C content;
 
+    public GenericResponseDTO() {
+    }
+
+    public GenericResponseDTO(M metadata, C content) {
+        this.metadata = metadata;
+        this.content = content;
+    }
+
     public M getMetadata() {
         return metadata;
     }
