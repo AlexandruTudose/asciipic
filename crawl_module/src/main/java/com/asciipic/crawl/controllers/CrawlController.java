@@ -1,18 +1,20 @@
 package com.asciipic.crawl.controllers;
 
-import com.asciipic.crawl.dtos.CrawlResponseDTO;
+import com.asciipic.crawl.dtos.CrawlPostDTO;
 import com.asciipic.crawl.dtos.CrawlUpdateDTO;
+import com.asciipic.crawl.dtos.ResponseDTO;
 import com.asciipic.crawl.job.RedisJobPoster;
 import com.asciipic.crawl.models.Crawl;
 import com.asciipic.crawl.models.Job;
 import com.asciipic.crawl.models.Tag;
 import com.asciipic.crawl.models.Url;
-import com.asciipic.crawl.services.application.CrawlService;
-import com.asciipic.crawl.services.application.JobService;
-import com.asciipic.crawl.services.application.TagService;
-import com.asciipic.crawl.services.application.UrlService;
-import com.asciipic.crawl.transformers.CrawlToCrawlResponseDTO;
+import com.asciipic.crawl.services.database.application.CrawlService;
+import com.asciipic.crawl.services.database.application.JobService;
+import com.asciipic.crawl.services.database.application.TagService;
+import com.asciipic.crawl.services.database.application.UrlService;
+import com.asciipic.crawl.services.external.CrawlsSaver;
 import com.asciipic.crawl.transformers.CrawlToJobPostDTO;
+import com.asciipic.crawl.transformers.CrawlToResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/crawls")
 public class CrawlController {
-    private final java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("dd-mm-yyyy");
+    private final java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
     private CrawlService crawlService;
@@ -42,7 +44,7 @@ public class CrawlController {
     private UrlService urlService;
 
     @Autowired
-    private CrawlToCrawlResponseDTO crawlToCrawlResponseDTO;
+    private CrawlToResponseDTO crawlToResponseDTO;
 
     @Autowired
     private CrawlToJobPostDTO crawlToJobPostDTO;
@@ -50,46 +52,46 @@ public class CrawlController {
     @Autowired
     private RedisJobPoster redisJobPoster;
 
+    @Autowired
+    private CrawlsSaver crawlsSaver;
+
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<CrawlResponseDTO>> get() {
-        List<CrawlResponseDTO> crawlResponseDTOs = new ArrayList<>();
+    public ResponseEntity<List<ResponseDTO>> get() {
+        List<ResponseDTO> crawlResponseDTOs = new ArrayList<>();
         for(Crawl crawl:crawlService.getAll()){
-            crawlResponseDTOs.add(crawlToCrawlResponseDTO.transform(crawl));
+            crawlResponseDTOs.add(crawlToResponseDTO.transform(crawl));
         }
         return new ResponseEntity<>(crawlResponseDTOs, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{crawl_id}", method = RequestMethod.GET)
-    public ResponseEntity<CrawlResponseDTO> getById(@PathVariable(value = "crawl_id") long id) {
-        return new ResponseEntity<>(crawlToCrawlResponseDTO.transform(crawlService.getById(id)), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> getById(@PathVariable(value = "crawl_id") long id) {
+        return new ResponseEntity<>(crawlToResponseDTO.transform(crawlService.getById(id)), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<CrawlResponseDTO> post(@RequestParam(value = "site") String site,
-                                                 @RequestParam(value = "tag") String[] tagNames,
-                                                 @RequestParam(value = "number", required = false) Long numberOfImages,
-                                                 @RequestParam(value = "width", required = false) Long width,
-                                                 @RequestParam(value = "height", required = false) Long height,
-                                                 @RequestParam(value = "post_date", required = false) String dateString) {
-        Date date = null;
-        if (dateString != null) {
-            try {
-                date = simpleDateFormat.parse(dateString);
-            } catch (ParseException e) {
-                System.out.println("Wrong date format!");
-            }
 
-        }
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<ResponseDTO> postCrawl(@RequestBody CrawlPostDTO crawlPostDTO) {
 
         Job job = this.jobService.save(new Job());
-        List<Tag> tags = getTagList(tagNames);
-        Crawl crawl = new Crawl(job, false, new ArrayList<>(), site, date,
-                height == null ? 0 : height.intValue(), width == null ? 0 : width.intValue(),
-                numberOfImages == null ? 1 : numberOfImages.intValue(), tags);
+        List<Tag> tags = getTagList(crawlPostDTO.getTags());
+        Date postDate = null;
+        if(crawlPostDTO.getPostDate() != null){
+            try {
+                postDate = simpleDateFormat.parse(crawlPostDTO.getPostDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(crawlPostDTO.getPostDate());
+        System.out.println(postDate);
+
+        Crawl crawl = new Crawl(job, false, new ArrayList<>(), crawlPostDTO.getSource(), postDate,
+                crawlPostDTO.getSize(), crawlPostDTO.getNumber(), tags);
         crawl = crawlService.save(crawl);
         redisJobPoster.post(crawlToJobPostDTO.transform(crawl));
-        return new ResponseEntity<>(crawlToCrawlResponseDTO.transform(crawl), HttpStatus.OK);
+        return new ResponseEntity<>(crawlToResponseDTO.transform(crawl), HttpStatus.OK);
     }
 
 
@@ -109,15 +111,15 @@ public class CrawlController {
             crawl.setDone(true);
             crawlService.save(crawl);
 
-
             job.setFinishDate(new Date());
             jobService.save(job);
+
         }
         return new ResponseEntity(HttpStatus.OK);
     }
 
 
-    private List<Tag> getTagList(String[] tagNames) {
+    private List<Tag> getTagList(List<String> tagNames) {
         List<Tag> tags = new ArrayList<>();
         for (String tagName : tagNames) {
             Tag tag = new Tag(tagName);
