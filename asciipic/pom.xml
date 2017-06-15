@@ -5,7 +5,7 @@
 
     <groupId>com.asciipic</groupId>
     <artifactId>asciipic</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>asciipic</name>
@@ -34,6 +34,23 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.javacc</groupId>
+            <artifactId>javacc</artifactId>
+            <version>7.0.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -44,6 +61,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>
