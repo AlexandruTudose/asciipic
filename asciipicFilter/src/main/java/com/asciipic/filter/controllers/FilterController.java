@@ -107,41 +107,4 @@ public class FilterController {
         }
         return number;
     }
-
-    private ImagePostDTO getImageForVerification() {
-
-        ImagePostDTO imagePostDTO = new ImagePostDTO();
-        byte[] imageByte = new byte[0];
-        try {
-            BufferedImage image = ImageIO.read(new File("D:\\images.jpg"));
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
-            imageByte = baos.toByteArray();
-            imagePostDTO.setByteImage(imageByte);
-            imagePostDTO.setHeight(image.getHeight());
-            imagePostDTO.setWidth(image.getWidth());
-
-            imagePostDTO.setUrl("facebook");
-            imagePostDTO.setSource("alice");
-            imagePostDTO.setSize("large");
-
-            DateFormat format = new SimpleDateFormat("dd-mm-yyyy");
-            Date dateOne = format.parse("21-12-2011");
-
-            List<String> tags = new ArrayList<>();
-            tags.add("maria");
-            tags.add("loveeee");
-
-            imagePostDTO.setPostDate(dateOne);
-            imagePostDTO.setCrawlDate(dateOne);
-            imagePostDTO.setTags(tags);
-            imagePostDTO.setSaved(true);
-
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-
-        return imagePostDTO;
-
-    }
 }
