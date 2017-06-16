@@ -25,6 +25,9 @@ public class JournalizeLogout {
     @Column(name = "cause", length = 32)
     private String cause;
 
+    public JournalizeLogout() {
+    }
+
     public long getId() {
         return id;
     }

@@ -1,8 +1,9 @@
 package com.asciipic.journalize.dtos;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class JournalizeLoginDTO {
+public class JournalizeLoginDTO implements Serializable{
     private String actionType;
     private Date actionDate;
     private UserDTO userDetails;
@@ -47,5 +48,16 @@ public class JournalizeLoginDTO {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    @Override
+    public String toString() {
+        return "JournalizeLoginDTO{" +
+                "actionType='" + actionType + '\'' +
+                ", actionDate=" + actionDate +
+                ", userDetails=" + userDetails +
+                ", ip='" + ip + '\'' +
+                ", userAgent='" + userAgent + '\'' +
+                '}';
     }
 }

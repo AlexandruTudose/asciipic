@@ -9,24 +9,15 @@ import com.asciipic.journalize.repositories.JournalizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class JournalizeCrawlTransformer {
-    @Autowired
-    private JournalizeRepository journalizeRepository;
 
-    @Autowired
-    private JobRepository jobRepository;
-
-    public JournalizeCrawlDTO toDTO(JournalizeCrawl journalizeCrawl){
+    public JournalizeCrawlDTO toDTO(JournalizeCrawl journalizeCrawl, Job job){
         JournalizeCrawlDTO journalizeCrawlDTO = new JournalizeCrawlDTO();
-
-        Journalize journalize = journalizeRepository.getOne(journalizeCrawl.getId());
 
         UserTransformer userTransformer = new UserTransformer();
         JobTransformer jobTransformer = new JobTransformer();
 
-        Job job = jobRepository.findOne(journalizeCrawl.getJopId());
-
-        journalizeCrawlDTO.setActionType(journalize.getAction());
-        journalizeCrawlDTO.setActionDate(journalize.getActionDate());
+        journalizeCrawlDTO.setActionType(journalizeCrawl.getJournalize().getAction());
+        journalizeCrawlDTO.setActionDate(journalizeCrawl.getJournalize().getActionDate());
         journalizeCrawlDTO.setUserDetails(userTransformer.toDTO(journalizeCrawl.getUser()));
         journalizeCrawlDTO.setJobDetails(jobTransformer.toDTO(job));
 

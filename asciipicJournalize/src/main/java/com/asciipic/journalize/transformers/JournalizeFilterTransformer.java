@@ -8,25 +8,15 @@ import com.asciipic.journalize.repositories.ImageRepository;
 import com.asciipic.journalize.repositories.JournalizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class JournalizeFilerTransformer {
+public class JournalizeFilterTransformer {
 
-    @Autowired
-    private JournalizeRepository journalizeRepository;
-
-    @Autowired
-    private ImageRepository imageRepository;
-
-    public JournalizeFilterDTO toDTO(JournalizeFilter journalizeFilter){
+    public JournalizeFilterDTO toDTO(JournalizeFilter journalizeFilter, Image image){
         JournalizeFilterDTO journalizeFilterDTO = new JournalizeFilterDTO();
-
-        Journalize journalize = journalizeRepository.getOne(journalizeFilter.getId());
 
         UserTransformer userTransformer = new UserTransformer();
 
-        Image image = imageRepository.findOne(journalizeFilter.getImageId());
-
-        journalizeFilterDTO.setActionType(journalize.getAction());
-        journalizeFilterDTO.setActionDate(journalize.getActionDate());
+        journalizeFilterDTO.setActionType(journalizeFilter.getJournalize().getAction());
+        journalizeFilterDTO.setActionDate(journalizeFilter.getJournalize().getActionDate());
         journalizeFilterDTO.setUserDetails(userTransformer.toDTO(journalizeFilter.getUser()));
         journalizeFilterDTO.setImagePostDate(image.getPostDate());
         journalizeFilterDTO.setHeight(image.getHeight());

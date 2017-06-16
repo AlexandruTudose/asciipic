@@ -24,19 +24,20 @@ public class JournalizeCrawl {
 
     @NotNull
     @Column(name = "job_id")
-    private long jopId;
+    private long jobId;
 
     @Column(name = "post_date")
     private Date postDate;
 
-    @Column(name = "height")
-    private long height;
+    @Column(name = "image_size")
+    private String size;
 
-    @Column(name = "width")
-    private long width;
 
     @Column(name = "tag", length = 32)
     private String tag;
+
+    public JournalizeCrawl() {
+    }
 
     public JournalizeCrawl(Journalize journalize) {
         this.journalize = journalize;
@@ -66,12 +67,12 @@ public class JournalizeCrawl {
         this.user = user;
     }
 
-    public long getJopId() {
-        return jopId;
+    public long getJobId() {
+        return jobId;
     }
 
-    public void setJopId(long jopId) {
-        this.jopId = jopId;
+    public void setJobId(long jobId) {
+        this.jobId = jobId;
     }
 
     public Date getPostDate() {
@@ -82,20 +83,12 @@ public class JournalizeCrawl {
         this.postDate = postDate;
     }
 
-    public long getHeight() {
-        return height;
+    public String getSize() {
+        return size;
     }
 
-    public void setHeight(long height) {
-        this.height = height;
-    }
-
-    public long getWidth() {
-        return width;
-    }
-
-    public void setWidth(long width) {
-        this.width = width;
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public String getTag() {

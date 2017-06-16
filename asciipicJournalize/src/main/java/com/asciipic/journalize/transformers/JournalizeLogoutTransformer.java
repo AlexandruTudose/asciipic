@@ -13,12 +13,10 @@ public class JournalizeLogoutTransformer {
     public JournalizeLogoutDTO toDTO(JournalizeLogout journalizeLogout) {
         JournalizeLogoutDTO journalizeLogoutDTO = new JournalizeLogoutDTO();
 
-        Journalize journalize = journalizeRepository.getOne(journalizeLogout.getId());
-
         UserTransformer userTransformer = new UserTransformer();
 
-        journalizeLogoutDTO.setActionType(journalize.getAction());
-        journalizeLogoutDTO.setActionDate(journalize.getActionDate());
+        journalizeLogoutDTO.setActionType(journalizeLogout.getJournalize().getAction());
+        journalizeLogoutDTO.setActionDate(journalizeLogout.getJournalize().getActionDate());
         journalizeLogoutDTO.setUserDetails(userTransformer.toDTO(journalizeLogout.getUser()));
         journalizeLogoutDTO.setCause(journalizeLogout.getCause());
 
