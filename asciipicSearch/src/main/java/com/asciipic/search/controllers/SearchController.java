@@ -5,8 +5,6 @@ import com.asciipic.search.dtos.ImagePostDTO;
 import com.asciipic.search.dtos.ResponseDTO;
 import com.asciipic.search.models.Image;
 import com.asciipic.search.models.SavedImage;
-import com.asciipic.search.repositories.ImageRepository;
-import com.asciipic.search.repositories.TagRepository;
 import com.asciipic.search.services.BuildResponseService;
 import com.asciipic.search.services.ImageService;
 import com.asciipic.search.transformers.ImageTransformer;
@@ -42,7 +40,7 @@ public class SearchController {
             List<String> urls = buildResponseService.getResponse(imageGetDTO);
             return new ResponseEntity<>(new ResponseDTO(true, urls), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ResponseDTO(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDTO(false, e.getMessage()), HttpStatus.OK);
         }
     }
 
@@ -75,7 +73,7 @@ public class SearchController {
     public ResponseEntity<ResponseDTO> getAsciiById(@PathVariable("imageId") Long imageId) {
         SavedImage savedImage = imageService.findSavedImageById(imageId);
         if (savedImage == null) {
-            return new ResponseEntity<>(new ResponseDTO(false, "There is no image saved with this id"), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new ResponseDTO(false, "There is no image saved with this id"), HttpStatus.OK);
         }
 
         String response = imageService.getAsciiData(imageId);
