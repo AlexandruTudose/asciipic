@@ -30,7 +30,18 @@ public class AsciiServiceImpl implements AsciiService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        int height = image.getHeight();
+        int width = image.getWidth();
 
+        if (height > width) {
+            height = maxSideLength(height);
+            width = computeTheSize(height, image.getHeight(), image.getWidth());
+        } else {
+            width = maxSideLength(width);
+            height = computeTheSize(width, image.getWidth(), image.getHeight());
+        }
+
+        image = scale(image, width, height, (double) width / image.getWidth(), (double) height / image.getHeight());
         image = scale(image, image.getWidth(), image.getHeight() / 2, 1, 0.5);
         StringBuilder asciiPic = new StringBuilder(image.getHeight() * (image.getWidth() + 1));
 
@@ -98,5 +109,19 @@ public class AsciiServiceImpl implements AsciiService {
             str = '%';
         }
         return str;
+    }
+
+    private int maxSideLength(int side) {
+        if (side >= 1024) {
+            return 125;
+        } else if (side >= 640) {
+            return 100;
+        } else {
+            return 65;
+        }
+    }
+
+    private int computeTheSize(int a, int imageHeight, int imageWidth) {
+        return ((a * imageWidth) / imageHeight);
     }
 }

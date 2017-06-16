@@ -1,10 +1,12 @@
 package com.asciipic.search.dtos;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.Serializable;
 import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
 
-public class ImagePostDTO {
+public class ImagePostDTO implements Serializable{
 
     private String url;
     private String source;
@@ -15,7 +17,7 @@ public class ImagePostDTO {
     private Date crawlDate;
     private Boolean isSaved;
     private List<String> tags;
-    private Blob blobImage;
+    private byte[] byteImage;
 
     public String getUrl() {
         return url;
@@ -89,11 +91,11 @@ public class ImagePostDTO {
         this.tags = tags;
     }
 
-    public Blob getBlobImage() {
-        return blobImage;
+    public byte[] getByteImage() {
+        return byteImage;
     }
 
-    public void setBlobImage(Blob blobImage) {
-        this.blobImage = blobImage;
+    public void setByteImage(byte[] byteImage) {
+        this.byteImage = byteImage;
     }
 }

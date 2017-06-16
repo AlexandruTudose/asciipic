@@ -20,13 +20,15 @@ public class GetCustomImagesServicesImpl implements GetCustomImagesService {
 
     @Override
     public List<Long> getAllImages(ImageGetDTO imageGetDTO) {
-
         List<Long> listOfIds = new ArrayList<>();
         List<Image> images = imageRepository.findAll();
         for (Image image : images) {
             try {
                 if (isAValidImage(image, imageGetDTO)) {
                     listOfIds.add(image.getId());
+                }
+                if(listOfIds.size() >= imageGetDTO.getNumber()){
+                    break;
                 }
             } catch (ParseException e) {
                 return listOfIds;
@@ -36,19 +38,17 @@ public class GetCustomImagesServicesImpl implements GetCustomImagesService {
     }
 
     private boolean isAValidImage(Image image, ImageGetDTO imageGetDTO) throws ParseException {
-        if (!image.getIsSaved()) {
-            return false;
-        }
         if (!imageGetDTO.getSource().equals("")) {
             if (!imageGetDTO.getSource().equals(image.getSource())) {
                 return false;
             }
         }
 
-        DateFormat format = new SimpleDateFormat("dd-mm-yyyy");
-        Date dateOne = format.parse(imageGetDTO.getPostDate());
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
         if (!imageGetDTO.getPostDate().equals("")) {
-            if (!dateOne.equals(image.getPostDate())) {
+            Date dateOne = format.parse(imageGetDTO.getPostDate());
+            if (!(dateOne.getTime() <= image.getPostDate().getTime() && image.getPostDate().getTime() < dateOne.getTime() + 86399000)) {
                 return false;
             }
         }

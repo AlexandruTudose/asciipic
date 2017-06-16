@@ -1,12 +1,17 @@
 package com.asciipic.search.services;
 
 import com.asciipic.search.dtos.ImagePostDTO;
+import com.asciipic.search.models.Image;
 import com.asciipic.search.models.SavedImage;
+
+import java.sql.SQLException;
 
 public interface ImageService {
     String getAsciiData(long id);
 
-    void addNewImage(ImagePostDTO imagePostDTO);
+    Image addNewImage(ImagePostDTO imagePostDTO) throws SQLException;
 
-    SavedImage findImageById(Long imageId);
+    SavedImage findSavedImageById(Long imageId);
+
+    Image findImageById(Long imageId);
 }

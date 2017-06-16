@@ -1,12 +1,14 @@
 package com.asciipic.search.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ImageGetDTO {
+public class ImageGetDTO implements Serializable {
     private String source;
     private String postDate;
     private String size;
     private List<String> tags;
+    private int number;
 
     public String getSource() {
         return source;
@@ -38,5 +40,13 @@ public class ImageGetDTO {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

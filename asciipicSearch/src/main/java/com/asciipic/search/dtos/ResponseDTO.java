@@ -10,6 +10,9 @@ public class ResponseDTO implements Serializable {
     private Metadata metadata;
     private List<String> content;
 
+    public ResponseDTO() {
+    }
+
     public ResponseDTO(Boolean successful, List<String> urls) {
         this.metadata = new Metadata(successful);
         this.content = urls;
@@ -39,6 +42,9 @@ public class ResponseDTO implements Serializable {
 
     private class Metadata implements Serializable {
         private Boolean successful;
+        public Metadata(){
+
+        }
 
         Metadata(Boolean successful) {
             this.successful = successful;
