@@ -8,16 +8,16 @@ import com.asciipic.login.models.UserToken;
 import com.asciipic.login.services.UserService;
 import com.asciipic.login.services.UserTokenService;
 import com.asciipic.login.transformers.UserTransformer;
+import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class LoginController {
@@ -57,10 +57,25 @@ public class LoginController {
             httpHeaders.set("Authorization", userToken.getToken());
             httpHeaders.set("Username", user.getUsername());
         } catch (Exception e) {
-            return new ResponseEntity<ResponseDTO>(new ResponseDTO(false, e.getMessage()), httpHeaders, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ResponseDTO(false, e.getMessage()), httpHeaders, HttpStatus.UNAUTHORIZED);
         }
 
         return new ResponseEntity<>(new ResponseDTO(true, "Success! Now you are logged in to AsciiPic!"), httpHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ResponseEntity<ResponseDTO> getUserByToken(@RequestParam String token) {
+        UserToken userToken = userTokenService.getUserTokenByToken(token);
+        System.out.println("1");
+        if(userToken == null){
+            return  new ResponseEntity<>(new ResponseDTO(false, "User not logged in!"), HttpStatus.OK);
+        }
+        System.out.println("2");
+        User user = userService.getUserById(userToken.getIdUser());
+        List<String> list = new ArrayList<>();
+        list.add(user.getEmail());
+        list.add(String.valueOf(user.getId()));
+        return new ResponseEntity<>(new ResponseDTO(true,list), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.PUT)
