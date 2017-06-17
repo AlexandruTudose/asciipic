@@ -96,4 +96,18 @@ public class ImagePostDTO implements Serializable{
     public void setByteImage(byte[] byteImage) {
         this.byteImage = byteImage;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "url='" + url + '\'' +
+                ", source='" + source + '\'' +
+                ", size='" + size + '\'' +
+                ", height=" + height +
+                ", width=" + width +
+                ", postDate=" + postDate +
+                ", crawlDate=" + crawlDate +
+                ", tags=" + tags +
+                "}";
+    }
 }
