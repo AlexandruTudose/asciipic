@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AsciiPic Report</title>
+    <link rel="stylesheet" href="css/scholarly.min.css">
+    <script src="js/scholarly.min.js"></script>
+</head>
+<body prefix="schema: http://schema.org">
+<header>
+    <h1>AsciiPic</h1>
+</header>
+<div role="contentinfo">
+    <dl>
+        <dt>Authors</dt>
+        <dd>
+            Alexandra Folvaiter
+            <br>
+            Alexandru Tudose
+        </dd>
+
+        <dt>Link</dt>
+        <dd>
+            <a href="https://github.com/AlexandruTudose/asciipic/">https://github.com/AlexandruTudose/asciipic/</a>
+        </dd>
+    </dl>
+</div>
+<section typeof="sa:Abstract" id="abstract" role="doc-abstract">
+    <h2>Descriere proiect</h2>
+    <p>
+        In mod normal, accesul la Web se realizeaza pe baza unui browser.
+        Se doreste experimentarea unei interactiuni Web in linia de comandă,
+        punandu-se la dispozitie o platforma
+        extensibila capabila sa ofere suport pentru cautarea, manipularea,
+        agregarea si exportarea imaginilor
+        impreuna cu metadata ascociata acestora utilizand difierite API-uri
+        publice ca Flickr, Instagram, etc.
+    </p>
+    <p>
+
+        Aplicatia va expune propriul API si va pune la dispozitie doua modalitati
+        de interactiune cu acesta:
+        - una prin intermediul unei interfete web ce emuleaza o linie de comanda;
+        - una folosind un client, direct dintr-un terminal.
+    </p>
+</section>
+<section id="structure">
+    <!-- review? -->
+    <h2>Tehnologii Stack</h2>
+
+    <section id="Root">
+        <!-- review? -->
+        <h3>Front-end</h3>
+        <p>
+            Pe partea de front-end am folosit:
+        <ul>
+            <li>HTML5</li>
+            <li>CSS3</li>
+            <li>jQuery</li>
+            <li>ajax</li>
+        </ul>
+        </p>
+
+    </section>
+    <section id="article">
+        <!-- review? -->
+        <h3>Back-end</h3>
+        <p>
+            Baze de date relationare: Oracle
+        </p>
+        <p>ORM: Hibernate</p>
+
+        <p>Spring Framework:
+        <ul>
+            <li>JpaRepository</li>
+            <li>CrudRepository</li>
+            <li>Dependency Injection/Inversion of Control</li>
+            <li>Services</li>
+            <li> REST API</li>
+        </ul>
+        </p>
+
+        <p>
+            Design patterns:
+        <ul>
+            <li>Builder</li>
+            <li>Repository</li>
+            <li>Producer-Consumer</li>
+            <li>Defensive coding</li>
+            <li>MVC</li>
+        </ul>
+        </p>
+    </section>
+    <section id="hunk">
+        <!-- review? -->
+        <h3>Design Architecture</h3>
+        <section id="microservices">
+            <!-- review? -->
+            <h3>Microservicii</h3>
+
+            <p>
+                Aplicatia este scrisa in java si are la baza o arhitectura pe microservicii. Este impartia in 6 module
+                principale:
+
+            <ul>
+
+
+                <li> Core - care actioneaza ca un gateway pentru toate celelalte si care comunica direct cu
+                    front-end-ul. In interiorul sau sunt preluate si parsate toate comenzile din terminal. Apoi sunt
+                    facute apelurile necesare pentru a obtine rezultate, care ulterior sunt afisate in terminal.
+                </li>
+                <li> Login - avand o legatura directa doar cu core, modulul login este responsabil pentru
+                    inregistrarea, autentificarea, cofirmarea sesiunii si dezautentificarea utilizatorilor. In
+                    implementareaa sa am utilizat un token care este confirmat si reinoit la fiecare comanda scrisa in
+                    terminal. Astfel daca token-ul nu poate fi confirmat comenzile introduse nu sunt parsate. Exceptie
+                    fac comenzile "login" si "register".
+                </li>
+                <li> Search - ofera functionalitatea principala a aplicatiei. Permite cautarea imaginilor dupa diverese
+                    criterii si totodata este responsabil de introducerea de noi imagini in baza de date. Aceasta
+                    operatie se face pe baza unui rest api ce accepta json-uri ce contin imagini si metadate asociate
+                    acestora. Deasemena ofera un api pentru conversia imaginilor in format ascii.
+                </li>
+                <li> Crawl - permite aducerea de noi imagini in aplicatie. Interactioneaza cu api-ul de la flickr pentru
+                    a face posibila popularea bazei locale de date. Acesta are o arhitectura de tipul producer-consumer:
+                    sunt postate joburi de crawl, care apoi sunt preluate de workeri si rezolvate.
+                </li>
+                <li> Filter - permite aplicarea de filtre peste imagini existente. Primeste si returneaza o imagine
+                    impreuna cu metadatele ei.
+                </li>
+                <li> Journalize - permite jurnalizarea operatiilor ce au loc in aplicatie si generarea diverselor
+                    statistici pe baza acestora.
+                </li>
+            </ul>
+            In plus exista si modulul LocalTerminal care pune la dispozitie o alta metoda de interactiune cu aplicatia.
+            </p>
+            <img src="imag/microservicii.png">
+
+
+        </section>
+        <section id="onion">
+            <!-- review? -->
+            <h3>Arhitectura Onion</h3>
+            <p>
+                Toate modulele din aplicatie sunt structurate pe arhitectura onion, adica modulele sunt structurate pe
+                layere, au dependinte in asa fel incat cuplarea dintre ele sa fie cat mai mica.
+                Modul in care layerele sunt asezate, de la interior la exterior, este   <code> Model -> Repository -> Service ->
+                Controller</code>, modulele din exterior pot depinde de cele din interior, insa invers nu se poate.
+            </p>
+            <img src="imag/image_thumb1.png" alt="Scholarly HTML logo">
+
+        </section>
+    </section>
+    <section id="inline">
+        <!-- review? -->
+        <h3>Functionalitati</h3>
+        <p>
+            Aplicatia permite:
+        <ul>
+            <li>cautarea si filtrarea imaginilor dupa tag-uri, data postarii,
+                dimensiune etc.
+            </li>
+            <li>
+                vizualizarea imaginilor in format ascii(atat la linia de comanda cat
+                si in interfata web);
+            </li>
+            <li> exportarea url-urilor impreuna cu metadata asociata acestora in
+                diverse formate(JSON, XML, etc.);
+            </li>
+            <li>
+                transformarea imaginilor astfel gasite(resize, aplicarea diverselor
+                filtre);
+            </li>
+        </ul>
+        </p>
+        <p>
+            Datorita faptului ca anumite request-uri pot fi costisitoare oferim
+            posibilitatea postarii asincrone de job-uri
+            care vor fi executate de o arhitectura distribuita de work-eri.
+            Astfel putem interoga statusul job-ului sau la finalul lui putem opta
+            pentru primirea unui e-mail cu informatiile cerute.
+        </p>
+
+    </section>
+</body>
+</html>
