@@ -1,8 +1,6 @@
-var TOKEN = null,
-    RETRY_COUNT = 25,
-    RETRY_DELAY = 60;
-
-var username = 'guest';
+var TOKEN = null;
+var RETRY_COUNT = 25;
+var RETRY_DELAY = 60;
 
 function setSize() {
     let height = $("#term-row").height() - $("footer").height() - 100;
@@ -16,17 +14,19 @@ function sendCommand(command, terminal) {
         type: "POST",
         contentType: "application/json",
         url: "/api",
+        headers: {"Authorization": localStorage.getItem('token')},
         data: JSON.stringify(data),
-        dataType: 'json',
+        dataType: "json",
         timeout: 100000,
-        success: function (responses) {
+        success: function (responses, textStatus, request) {
+            localStorage.setItem('token', request.getResponseHeader('Authorization'));
             responses.forEach(response => {
-                if(response.metadata.successful == true){
+                if (response.metadata.successful == true) {
                     response.content.forEach(content => {
                         terminal.echo(content);
                     })
                 }
-                else{
+                else {
                     response.content.forEach(content => {
                         terminal.error(content);
                     })
@@ -40,15 +40,15 @@ function sendCommand(command, terminal) {
 }
 
 (function () {
-    'use strict';
+    "use strict";
     jQuery(function ($, undefined) {
-        $('#term').terminal(function (command) {
-            // Preserve theterminal 
+        $("#term").terminal(function (command) {
+            // Preserve teterminal
             let terminal = this;
             sendCommand(command, terminal);
         }, {
-            greetings: 'AsciiPic Web CLI',
-            prompt: username + '@asciipic ~$ ',
+            greetings: "AsciiPic Web CLI",
+            prompt: "asciipic ~$ ",
             resize: true,
             history: true,
         });
