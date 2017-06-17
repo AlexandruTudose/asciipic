@@ -33,144 +33,16 @@ Am estimat proiectul ca fiind unul de tip S care ar avea nevoie de 4 persoane pe
 Website: https://asciipic.xyz/
 
 
-Quick start
+Detalii de implementare
 -----------
-Este indicata generarea unui fisier de configurare prima data.
-
-```bash
-# install deps
-# for ubuntu
-~ $ sudo apt-get install vim git python-dev -y
-# fot centos
-~ $ sudo yum install vim git python-dev -y
-
-~ $ pip install virtualenv
-
-# clone project
-~ $ git clone https://github.com/micumatei/asciipic
-~ $ cd asciipic
-
-# create a virtual env for this project
-~ asciipic/ $ virtualenv --python=python3 .venv/asciipic
-
-# activate the venv
-~ asciipic/ $ source .venv/asciipic/bin/activate
-
-# install the project
-~ asciipic/ $ pip install ../asciipic
-# Or 
-~ asciipic/ $ python setup.py install
-
-# install oracle client
-# Se poate sa aveti nevoie de niste binare de la oracle :'(
-# dar daca aveti oracle-db instalat pe masina ar trebui sa fie deja instalate
-~ asciipic/ $ pip install -r oracle-requirements.txt
-
-```
-
-Generarea fisierului de configurare
------------------------------------
-Pentru a genera fisierul de configurare trebuie sa avem proiectul deja instalat.
-```bash
-
-# genetare a config file
-~ asciipic/ $ oslo-config-generator --config-file etc/asciipic/asciipic-config-generator.conf
-~ asciipic/ $ sudo mkdir /etc/asciipic/
-
-# copy the config file in /etc/asciipic
-~ asciipic/ $ sudo cp etc/asciipic/asciipic.conf.sample /etc/asciipic/asciipic.conf
-```
+Aplicatia este scrisa in java si are la baza o arhitectura pe microservicii. Este impartia in 6 module principale:
+ - Core - care actioneaza ca un gateway pentru toate celelalte si care comunica direct cu front-end-ul. In interiorul sau sunt preluate si parsate toate comenzile din terminal. Apoi sunt facute apelurile necesare pentru a obtine rezultate, care ulterior sunt afisate in terminal.
+ - Login - avand o legatura directa doar cu crawl, modulul login este responsabil pentru inregistrarea, autentificarea, cofirmarea sesiunii si dezautentificarea utilizatorilor. In implementareaa sa am utilizat un token care este confirmat si reinoit la fiecare comanda scrisa in terminal. Astfel daca token-ul nu poate fi confirmat comenzile introduse nu sunt parsate. Exceptie fac comenzile "login" si "register".
+ - Search - ofera functionalitatea principala a aplicatiei. Permite cautarea imaginilor dupa diverese criterii si totodata este responsabil de introducerea de noi imagini in baza de date. Aceasta operatie se face pe baza unui rest api ce accepta json-uri ce contin imagini si metadate asociate acestora. Deasemena ofera un api pentru conversia imaginilor in format ascii.
+ - Crawl - permite aducerea de noi imagini in aplicatie. Interactioneaza cu api-ul de la flickr pentru a face posibila popularea bazei locale de date. Acesta are o arhitectura de tipul producer-consumer: sunt postate joburi de crawl, care apoi sunt preluate de workeri si rezolvate.
+ - Filter - permite aplicarea de filtre peste imagini existente. Primeste si returneaza o imagine impreuna cu metadatele ei.
+ - Journalize - permite jurnalizarea operatiilor ce au loc in aplicatie si generarea diverselor statistici pe baza acestora.
+ 
+ In plus exista si modulul LocalTerminal care pune la dispozitie o alta metoda de interactiune cu aplicatia.
 
 
-Requirements
------------
-Proiectul are cateva dependite mai speciale:
-####OracleDB
-Foloseste ca DB oracle si trebuie sa specificam informatiile de acces catre aceasta baza de date
-in fisierul `/etc/asciipic/asciipic.conf`.
-Exemplu :
-```
-[oracle]
-host = x.x.x.x
-port = 8080
-username = ASCIIPIC
-password = ASCIIPIC
-```
-Pentru a instala oracle puteti urmari acest [tutorial](http://www.oracle.com/webfolder/technetwork/tutorials/obe/db/11g/r1/prod/install/dbinst/dbinst.htm) dar din experienta procesul nu este prea usor.
-O varianta mai usoara este sa folosim docker-engine pentru a porni un container cu oracle deja instalat.
-#####OracleDB in docker container 
-Pentru a instala docker puteti urmari [documentatia oficiala](https://docs.docker.com/engine/installation/).
-Un tutorial bun pentru python se poate gasi [aici](https://gist.github.com/kimus/10012910).
-Dupa ce aveti docker instalat puteti porni containerul ( creat special pentru aceasta aplicatie ) cu urmatoare comanda:
-` docker run --name oracle-asciipic -d -p 8081:1521 matei10/asciipic_db:latest`
-
-####Redis
-Folosit pentru short-term storage si channels ( messaging queue ). 
-La fel ca in cazul bazei de date trebuie sa specificam datele de acces in fisierul `/etc/asciipic/asciipic.conf`:
-```
-[redis]
-host = 127.0.0.1
-port = 6379
-database = 0
-```
-
-##Heroku
-Pentru CD folosim [Heroku](http://herokuapp.com/) in care trebuie sa instalam clientul nativ de oracle.
-Cea mai sipla varianta e sa folosim doua buildpacks:
-- la indexul 1 `https://github.com/wealthsimple/oracle-heroku-buildpack`
-- la indexul 2 `heroku/python`
-
-Primul va instala clientul nativ pentru oracle al doilea va instala proiectul de python
-
-**Note** Putem folosi si buildpack-ul `multi-builpack` pentru a versiona pachetele
-
-
-Test the project
-----------------
-Dupa ce s-a intalat proiectul putem sa il testam pronind local API-ul.
-
-```bash
-# activate the venv
-~ asciipic/ $ source .venv/asciipic/bin/activate
-
-# start the api
-~ asciipic/ $ asciipic server start
-[19/Mar/2017:02:06:35] ENGINE Listening for SIGHUP.
-[19/Mar/2017:02:06:35] ENGINE Listening for SIGHUP.
-[19/Mar/2017:02:06:35] ENGINE Listening for SIGTERM.
-[19/Mar/2017:02:06:35] ENGINE Listening for SIGTERM.
-[19/Mar/2017:02:06:35] ENGINE Listening for SIGUSR1.
-[19/Mar/2017:02:06:35] ENGINE Listening for SIGUSR1.
-[19/Mar/2017:02:06:35] ENGINE Bus STARTING
-[19/Mar/2017:02:06:35] ENGINE Bus STARTING
-....
-....
-....
-[19/Mar/2017:02:06:35] ENGINE Serving on http://127.0.0.1:8080
-[19/Mar/2017:02:06:35] ENGINE Bus STARTED
-[19/Mar/2017:02:06:35] ENGINE Bus STARTED
-....
-....
-....
-```
-Putem verifica acum la url-ul afisat(va depinde de fisierul de configurare) daca avem acces la api 
-
-Producer / Consumer example
----------------------------
-Intr-un terminal rulati `asciipic worker start` pentru a porni un worker
-
-In alt terminal rulati task-ul exemplu
-```
-from rq import Queue
-
-from asciipic.worker import worker
-from asciipic.tasks import example_task
-
-# NOTE(mmicu): just a hack in order to get
-# the rededis connection
-w = worker.Worker()
-rc = w.rcon
-
-q = Queue(connection=rc , name="low")
-r = q.enqueue(example_task.ExampleTask())
-```
