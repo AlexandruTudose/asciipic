@@ -3,6 +3,7 @@ package com.asciipic.services;
 import com.asciipic.commands.*;
 import com.asciipic.commands.basic.CommandError;
 import com.asciipic.dtos.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,9 @@ import java.util.List;
 
 @Service
 public class CommandRetrieverImpl implements CommandRetriever {
+
+    @Autowired
+    ExportCommand exportCommand;
 
     public ResponseDTO getResponse(String command, List<String> inputContent) {
         ResponseDTO response;
@@ -42,6 +46,13 @@ public class CommandRetrieverImpl implements CommandRetriever {
                     response = new FilterCommand().execute(inputContent);
                 } else {
                     response = new FilterCommand(command.substring(6)).execute(inputContent);
+                }
+            } else if (command.matches("export.*")) {
+                if (command.length() == 6) {
+                    response = exportCommand.execute(inputContent);
+                } else {
+                    exportCommand.setArgs(command.substring(6));
+                    response = exportCommand.execute(inputContent);
                 }
             } else {
                 throw new CommandError();
